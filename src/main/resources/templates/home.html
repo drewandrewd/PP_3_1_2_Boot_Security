@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+<body>
+<h1>Добро пожаловать!</h1>
+<p th:text="${message}"></p>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Выйти</button>
+</form>
+<table border="1" th:if="${user != null}">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Lastname</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.email}"></td>
+    </tr>
+    </tbody>
+</table>
+<p th:if="${user == null}">Вы не авторизованы.
+    <a th:href="@{/login}">Перейти на страницу авторизации</a>
+</p>
+</body>
+</html>
