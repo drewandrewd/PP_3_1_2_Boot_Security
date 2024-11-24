@@ -14,6 +14,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,10 +46,15 @@ public class UsersController {
 
     @PostMapping("/addUser")
     public String addUser(@Valid @ModelAttribute User user, BindingResult bindingResult, ModelMap model) {
-        if (userService.existsByEmail(user.getEmail())) {
-            bindingResult.rejectValue("email", "error.user", "Email уже используется");
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleService.getAllRoles()); // Повторно передаем список ролей при ошибке
+            return "add-user";
         }
-        user.setRoles(Set.of(roleService.findByName("USER")));
+        Set<Role> selectedRoles = user.getRoles().stream()
+                .map(role -> roleService.findByName(role.getName()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        user.setRoles(selectedRoles);
         userService.add(user);
         return "redirect:/admin/";
     }
@@ -56,11 +62,16 @@ public class UsersController {
     @GetMapping("/editUser/{id}")
     public String editUserForm(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("user", userService.getUser(id));
+        model.addAttribute("roles", roleService.getAllRoles());
         return "edit-user";
     }
 
     @PostMapping("/editUser")
     public String editUser(@Valid @ModelAttribute User user, BindingResult bindingResult, ModelMap model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roles", roleService.getAllRoles());
+            return "edit-user";
+        }
         userService.edit(user);
         return "redirect:/admin/";
     }
