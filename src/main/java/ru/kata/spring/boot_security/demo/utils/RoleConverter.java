@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.configs;
+package ru.kata.spring.boot_security.demo.utils;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class RoleConverter implements Converter<String, Role> {
 
     @Override
     public Role convert(String roleName) {
-        return roleService.findByName(roleName); // Преобразуем имя роли в объект Role
+        return roleService.findByName(roleName);
     }
 }
 

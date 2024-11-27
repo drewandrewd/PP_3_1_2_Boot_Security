@@ -11,4 +11,5 @@ public interface RoleService {
     List<Role> getAllRoles();
     Role findByName(String name);
     boolean existsByName(String name);
+    Role findById(Long id);
 }
