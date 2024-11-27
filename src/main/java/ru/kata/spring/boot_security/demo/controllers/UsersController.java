@@ -71,13 +71,6 @@ public class UsersController {
         return "redirect:/admin/";
     }
 
-//    @GetMapping("/editUser/")
-//    public String editUserForm(@RequestParam Long id, Model model) {
-//        model.addAttribute("allRoles", roleService.getAllRoles());
-//        model.addAttribute("currentUser", userService.getUser(id));
-//        return "edit-user"; // Изменение пользователя
-//    }
-
     @PostMapping("/editUser")
     public String updateUser(@ModelAttribute("user") User user) {
         userService.edit(user);
