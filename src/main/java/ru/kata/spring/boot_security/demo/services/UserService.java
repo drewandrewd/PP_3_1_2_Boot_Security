@@ -9,7 +9,7 @@ public interface UserService {
     void add(User user);
     List<User> getListUsers();
     void delete(Long id);
-    void edit(User user);
+    User edit(User user);
     User getUser(Long id);
     boolean existsByEmail(String email);
     User findByEmail(String email);

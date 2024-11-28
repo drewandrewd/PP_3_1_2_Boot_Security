@@ -50,7 +50,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${users}" th:attr="data-id=${user.id}">
                     <td th:text="${user.id}"></td>
                     <td th:text="${user.firstName}"></td>
                     <td th:text="${user.lastName}"></td>
@@ -212,7 +212,54 @@
         document.getElementById('deleteUserIdInput').value = id;
     });
 </script>
+<script>
+    document.querySelector('#editUserModal form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Останавливаем стандартное поведение формы
+        const formData = new FormData(this);
+        const userId = formData.get('id');
 
+        fetch(`/admin/editUser`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to edit user');
+                return response.json();
+            })
+            .then(updatedUser => {
+                const row = document.querySelector(`tr[data-id="${userId}"]`);
+                row.querySelector('td:nth-child(2)').textContent = updatedUser.firstName;
+                row.querySelector('td:nth-child(3)').textContent = updatedUser.lastName;
+                row.querySelector('td:nth-child(4)').textContent = updatedUser.email;
+                const rolesSpan = row.querySelector('td:nth-child(5)');
+                rolesSpan.innerHTML = updatedUser.roles.map(role => role.name).join(', ');
+                const editButton = row.querySelector('button[data-bs-target="#editUserModal"]');
+                editButton.setAttribute('data-firstname', updatedUser.firstName);
+                editButton.setAttribute('data-lastname', updatedUser.lastName);
+                editButton.setAttribute('data-email', updatedUser.email);
+                bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+<script>
+    document.querySelector('#deleteUserModal form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const userId = formData.get('id');
+        fetch(`/admin/deleteUser`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                console.log(`Response status: ${response.status}`);
+                if (!response.ok) throw new Error('Failed to delete user');
+                document.querySelector(`tr[data-id="${userId}"]`).remove();
+                bootstrap.Modal.getInstance(document.getElementById('deleteUserModal')).hide();
+            })
+            .catch(error => console.error(error));
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

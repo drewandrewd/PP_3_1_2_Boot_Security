@@ -1,11 +1,11 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -71,17 +71,18 @@ public class UsersController {
         return "redirect:/admin/";
     }
 
-    @PostMapping("/editUser")
-    public String updateUser(@ModelAttribute("user") User user) {
-        userService.edit(user);
-        return "redirect:/admin/";
-    }
-
-    @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam Long id, Model model) {
-        model.addAttribute("currentUser", userService.getUser(id));
-        userService.delete(id);
-        return "redirect:/admin/";
-    }
+@PostMapping("/editUser")
+@ResponseBody
+public ResponseEntity<User> editUser(@ModelAttribute User user) {
+    User currUser = userService.edit(user);
+    return ResponseEntity.ok(currUser);
 }
 
+@PostMapping("/deleteUser")
+@ResponseBody
+public ResponseEntity<Void> deleteUser(@ModelAttribute User user) {
+    userService.delete(user.getId());
+    return ResponseEntity.ok().build();
+}
+
+}

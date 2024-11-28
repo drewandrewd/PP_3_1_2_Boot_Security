@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +37,11 @@ public class UserServiceImp implements UserService {
 
    @Transactional
    @Override
-   public void edit(User user) {;
+   public User edit(User user) {;
       encodePassword(user);
       user.setRoles(assignRoles(user.getRoles()));
       userRepository.save(user);
+      return user;
    }
 
    @Override
