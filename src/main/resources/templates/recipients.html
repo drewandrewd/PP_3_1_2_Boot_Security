@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Получатели</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Список получателей</h2>
+    <div class="d-flex gap-2 mb-3">
+        <a th:href="@{/home}" class="btn btn-outline-dark">🏠 На главную</a>
+        <a th:href="@{/recipients/add}" class="btn btn-success">Добавить получателя</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th><th>Наименование</th><th>Email</th><th>Удалить</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="recipient : ${recipients}">
+            <td th:text="${recipient.id}"></td>
+            <td th:text="${recipient.name}"></td>
+            <td th:text="${recipient.email}"></td>
+            <td>
+                <form th:action="@{/recipients/delete}" method="post">
+                    <input type="hidden" name="id" th:value="${recipient.id}"/>
+                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

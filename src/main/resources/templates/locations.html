@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Зоны хранения</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+  <h2>Зоны хранения</h2>
+  <div class="d-flex gap-2 mb-3">
+    <a th:href="@{/home}" class="btn btn-outline-dark">🏠 На главную</a>
+    <a th:href="@{/locations/add}" class="btn btn-success">Добавить зону</a>
+  </div>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th><th>Зона</th><th>Полка</th><th>Описание</th><th>Удалить</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="location : ${locations}">
+      <td th:text="${location.id}"></td>
+      <td th:text="${location.zone}"></td>
+      <td th:text="${location.shelf}"></td>
+      <td th:text="${location.description}"></td>
+      <td>
+        <form th:action="@{/locations/delete}" method="post">
+          <input type="hidden" name="id" th:value="${location.id}"/>
+          <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
